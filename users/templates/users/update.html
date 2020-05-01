@@ -5,10 +5,11 @@
     <div class="" style="width: 100% ; text-align: center">
         <h2><div class="p-3 mb-2 bg-info text-white"><strong>Update Profile</strong></div></h2>
     </div>
-    {% if error_message %}
-        <div class="p-2 mb-1 bg-warning text-dark" style="text-align: center">{{ error_message }}</div>
+   {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
     {% endif %}
-
     <div  style="width: 60% ; margin-left: 20%; margin-right: 20%;">
         <form method="POST" action="{% url 'users:update' %}">
             {% if user.is_donor %}

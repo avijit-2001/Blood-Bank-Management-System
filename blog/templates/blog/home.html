@@ -1,15 +1,60 @@
 {% extends "blog/base.html" %}
 {% block blog_container %}
+
+
+    {% if message %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
+    {% if error_message %}
+        <div class="alert alert-warning" role="alert">
+            {{ error_message }}
+        </div>
+    {% endif %}
     {% for post in posts %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted }}</small>
+
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <a href="#" style="text-decoration: none">{{ post.author }}</a>
+                <small class="text-muted ml-2" >{{ post.date_posted }}</small>
             </div>
-            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-          </div>
-        </article>
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.content|truncatewords:50 }}</p>
+                <a href="{% url 'blog:about' post.id %}" class="btn btn-primary">Read</a>
+                {% if post.author == user %}
+                    <a href="{% url 'blog:update' post.id %}" class="btn btn-success">Update</a>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ forloop.counter }}">
+                        Delete
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="deleteModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Are you sure you want do delete</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {{ post.title }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <a href="{% url 'blog:delete' post.id %}">
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
     {% endfor %}
+
 {% endblock  %}

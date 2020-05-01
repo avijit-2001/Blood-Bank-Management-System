@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from . forms import SignUpForm, HospitalSignUpForm
 from . models import *
+from blog.models import Post
 # Create your views here.
 
 
@@ -60,6 +61,53 @@ def crp_don(request):
 
 
 def home(request):
+    context = {
+        'posts': Post.objects.order_by('-date_posted')
+    }
+    if request.user.is_authenticated and request.user.is_hospital:
+        blood_groups = ["O+", "O-", "A-", "A+", "B-", "B+", "AB-", "AB+", ]
+        repos = HospitalRepository.objects.filter(hospital_user_id=request.user.id)
+        flag = True
+        for blood in blood_groups:
+            quantity = 0
+            for repo in repos:
+                if repo.blood_group == blood:
+                    quantity = quantity + repo.quantity
+            if quantity < 10:
+                flag = False
+                break
+
+        if not flag:
+            context = {
+                'posts': Post.objects.order_by('-date_posted'),
+                'error_message': "Some of Repository is seems to be Empty !!! Please Check Out Now"
+            }
+            return render(request, 'blog/home.html', context)
+
+        context = {
+            'posts': Post.objects.order_by('-date_posted'),
+        }
+        return render(request, 'blog/home.html', context)
+
+    if request.user.is_authenticated and request.user.is_donor:
+        req = Request.objects.filter(donor_id=request.user.id, status=1)
+        if req:
+            context = {
+                'error_message': "You Have some emergency requests !!! Please check in Requests "
+            }
+            return render(request, 'blog/home.html', context)
+        else:
+            context = {
+                'posts': Post.objects.order_by('-date_posted'),
+            }
+            return render(request, 'blog/home.html', context)
+    context = {
+        'posts': Post.objects.order_by('-date_posted'),
+    }
+    return render(request, 'blog/home.html', context)
+
+
+def old_home(request):
 
     if request.user.is_authenticated and request.user.is_hospital:
         blood_groups = ["O+", "O-", "A-", "A+", "B-", "B+", "AB-", "AB+", ]
@@ -76,10 +124,15 @@ def home(request):
 
         if not flag:
             context = {
+                'posts': Post.objects.order_by('date_posted'),
                 'error_message': "Some of Repository is seems to be Empty !!! Please Check Out Now"
             }
-            return render(request, 'users/home.html', context)
-        return render(request, 'users/home.html')
+            return render(request, 'blog/home.html', context)
+
+        context = {
+            'posts': Post.objects.order_by('date_posted'),
+        }
+        return render(request, 'blog/home.html', context)
 
     if request.user.is_authenticated and request.user.is_donor:
         req = Request.objects.filter(donor_id=request.user.id, status=1)
@@ -87,10 +140,16 @@ def home(request):
             context = {
                 'error_message': "You Have some emergency requests !!! Please check in Requests "
             }
-            return render(request, 'users/home.html', context)
+            return render(request, 'blog/home.html', context)
         else:
-            return render(request, 'users/home.html')
-    return render(request, 'users/home.html')
+            context = {
+                'posts': Post.objects.order_by('date_posted'),
+            }
+            return render(request, 'blog/home.html', context)
+    context = {
+        'posts': Post.objects.order_by('date_posted'),
+    }
+    return render(request, 'blog/home.html', context)
 
 
 def logout_user(request):
@@ -625,3 +684,5 @@ def change(request):
         return redirect( request.POST["url"] )
     else:
         return redirect('users:home')
+
+

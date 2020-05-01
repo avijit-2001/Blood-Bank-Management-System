@@ -5,9 +5,12 @@
         <h2><div class="p-3 mb-2 bg-info text-white"><strong>Blood Request</strong></div></h2>
     </div>
 
-    {% if error_message %}
-        <div class="p-2 mb-1 mt-2 bg-warning text-dark" style="text-align: center">{{ error_message }}</div>
+   {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
     {% endif %}
+
     {% if blood_request %}
         <table class="table table-hover mt-2" >
             <thead>

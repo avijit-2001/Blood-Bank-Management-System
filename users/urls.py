@@ -5,6 +5,7 @@ app_name = 'users'
 urlpatterns = [
 
     path('', views.home, name='home'),
+    path('old/', views.old_home, name="old_post"),
     path('signup/donor/', views.sig_don, name='sig_don'),
     path('create/donor/', views.crp_don, name='crp_don'),
     path('login/', views.login_user, name='login_user'),

@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+
+{% block blog_container %}
+    <form action="{% url 'blog:update' post.id %}"  method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Title</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="{{ post.title }}" value="{{ post.title }}" name="title">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1"> Content</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20" name="content">
+                {{ post.content }}
+            </textarea>
+        </div>
+        <button type="submit" class="btn btn-warning">Update</button>
+        <a href="{% url 'users:home' %}">
+            <button class="btn btn-secondary">Cancel</button>
+        </a>
+
+    </form>
+{% endblock %}

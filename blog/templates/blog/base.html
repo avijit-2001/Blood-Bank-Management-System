@@ -5,24 +5,74 @@
     <main role="main" class="container">
         <div class="row">
             <div class="col-md-8">
-            {% block blog_container %}
+                {% block blog_container %}
 
-            {% endblock %}
+                {% endblock %}
             </div>
             <div class="col-md-4">
                 <div class="content-section">
                     <h3>Our Sidebar</h3>
                     <p class='text-muted'>You can put any information here you'd like.
                     <ul class="list-group">
-                        <li class="list-group-item list-group-item-light">Latest Posts</li>
+                        <a href="{% url 'blog:add' %}">
+                            <button type="button" class="btn btn-primary mt-3 mb-2">Create Post</button>
+                        </a>
+                        <a href="{% url 'users:old_post' %}" style="text-decoration: none">
+
+                            <li class="list-group-item list-group-item-light">Old Posts</li>
+
+                        </a>
                         <li class="list-group-item list-group-item-light">Announcements</li>
-                        <li class="list-group-item list-group-item-light">Calendars</li>
-                        <li class="list-group-item list-group-item-light">etc</li>
+                        <li class="list-group-item list-group-item-light">
+                            <body onLoad="initClock()">
+
+                            <div id="timedate">
+                                <a id="mon">January</a>
+                                <a id="d">1</a>,
+                                <a id="y">0</a><br />
+                                <a id="h">12</a> :
+                                <a id="m">00</a>:
+                                <a id="s">00</a>:
+                                <a id="mi">000</a>
+                            </div>
+
+                        </li>
                     </ul>
                     </p>
                 </div>
             </div>
         </div>
     </main>
+    <script>
+        // START CLOCK SCRIPT
+
+        Number.prototype.pad = function(n) {
+            for (var r = this.toString(); r.length < n; r = 0 + r);
+            return r;
+        };
+
+        function updateClock() {
+            var now = new Date();
+            var milli = now.getMilliseconds(),
+                sec = now.getSeconds(),
+                min = now.getMinutes(),
+                hou = now.getHours(),
+                mo = now.getMonth(),
+                dy = now.getDate(),
+                yr = now.getFullYear();
+            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var tags = ["mon", "d", "y", "h", "m", "s", "mi"],
+                corr = [months[mo], dy, yr, hou.pad(2), min.pad(2), sec.pad(2), milli];
+            for (var i = 0; i < tags.length; i++)
+                document.getElementById(tags[i]).firstChild.nodeValue = corr[i];
+        }
+
+        function initClock() {
+            updateClock();
+            window.setInterval("updateClock()", 1);
+        }
+
+        // END CLOCK SCRIPT
+    </script>
     </body>
 {% endblock %}
