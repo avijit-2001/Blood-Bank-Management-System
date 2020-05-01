@@ -1,0 +1,189 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+
+    <div class="" style="width: 100% ; text-align: center">
+        <h2><div class="p-3 mb-2 bg-info text-white"><strong>Blood Repository</strong></div></h2>
+    </div>
+
+    <form class="form-inline mt-2" method="POST" action="{% url 'users:view_repo' %}" >
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="search" placeholder="Blood Group" aria-label="Search" name="blood_group" required>
+        <button class="btn btn-outline-success my-3 my-sm-0" type="submit">Search</button>
+        <button type="button" class="btn btn-success ml-3" data-toggle="modal" data-target="#exampleModal3">
+            Add Blood
+        </button>
+    </form>
+    {% if error_message %}
+        <div class="p-2 mb-1 mt-2 bg-warning text-dark" style="text-align: center">{{ error_message }}</div>
+    {% endif %}
+    {% if repo or repos_sorted %}
+        <table class="table table-hover mt-2" >
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Blood Group</th>
+                <th scope="col">Plasma Count</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if repo %}
+                {% for rep in repo %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ rep.blood_group }}</td>
+                        <td>{{ rep.plasma_count }}</td>
+                        <td>
+                            {% if rep.quantity < 10 %}
+                                <div class="bg-danger text-white">{{ rep.2 }}</div>
+                            {% else %}
+                                {{ rep.quantity }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <button type="button" class="btn btn-outline-danger ml-3" data-toggle="modal" data-target="#exampleModal__{{ forloop.counter}}">
+                                Remove
+                            </button>
+                            <!-- Modal -->
+                            <form action="{% url 'users:remove_blood' %}" method="post">
+                                {% csrf_token %}
+                                <div class="modal fade" id="exampleModal__{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Enter the Blood Specifications</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label >Blood Group</label>
+                                                    <input type="text" class="form-control"  value="{{ rep.blood_group }}" name="blood_group" readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Plasma Count</label>
+                                                    <input type="number" class="form-control"  value="{{ rep.plasma_count }}" name="plasma_count"  readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Enter Quantity To Remove</label>
+                                                    <input type="number" class="form-control"  value="{{ rep.quantity }}" name="quantity"  required min="0" max="{{ rep.quantity }}">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <a href="#">
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+
+            {% if repos_sorted %}
+                {% for repo in repos_sorted %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ repo.0 }}</td>
+                        <td>{{ repo.1 }}</td>
+                        <td>
+                            {% if repo.2 < 10 %}
+                                <div class="bg-danger text-white">{{ repo.2 }}</div>
+                            {% else %}
+                                {{ repo.2 }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-danger ml-3" data-toggle="modal" data-target="#exampleModal_{{ forloop.counter}}">
+                                Remove
+                            </button>
+                            <!-- Modal -->
+                            <form action="{% url 'users:remove_blood' %}" method="post">
+                                {% csrf_token %}
+                                <div class="modal fade" id="exampleModal_{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Enter the Blood Specifications</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label >Blood Group</label>
+                                                    <input type="text" class="form-control"  value="{{ repo.0 }}" name="blood_group" readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Plasma Count</label>
+                                                    <input type="number" class="form-control"  value="{{ repo.1 }}" name="plasma_count"  readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Enter Quantity To Remove</label>
+                                                    <input type="number" class="form-control"  value="{{ repo.2 }}" name="quantity"  required min="0" max="{{ repo.2 }}">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <a href="#">
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+
+    {% endif %}
+    <!-- Modal -->
+    <form action="{% url 'users:add_blood' %}" method="post">
+        {% csrf_token %}
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Enter the Blood Specifications</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label >Enter Blood Group</label>
+                            <input type="text" class="form-control"  placeholder="Eg : O+" name="blood_group" pattern="[A|B|AB|O][+|-]" required>
+                            <small  class="form-text text-muted">Never Choose a invalid Blood Group </small>
+                        </div>
+                        <div class="form-group">
+                            <label >Enter Plasma Count</label>
+                            <input type="number" class="form-control"  placeholder="Eg : 10" name="plasma_count" min="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label >Enter Quantity</label>
+                            <input type="number" class="form-control"  placeholder="Eg : 20" name="quantity" min="1"  required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

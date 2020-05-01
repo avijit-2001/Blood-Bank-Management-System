@@ -1,0 +1,8 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+    <p><strong>Hare Krishna!!!</strong></p>
+    {% if error_message %}
+        <div class="p-2 mb-1 mt-2 bg-warning text-dark" style="text-align: center"><strong>{{ error_message }}</strong></div>
+    {% endif %}
+{% endblock %}

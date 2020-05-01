@@ -1,0 +1,17 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="" style="width: 100% ; text-align: center">
+        <h2><div class="p-3 mb-2 bg-info text-white"><strong>Sign Up</strong></div></h2>
+    </div>
+    <div class=" d-flex justify-content-center " style="max-width: 100% ;">
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form_user|crispy }}
+            <br>
+            <input type="submit" value="Register">
+        </form>
+    </div>
+{% endblock %}

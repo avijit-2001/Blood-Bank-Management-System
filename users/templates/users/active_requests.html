@@ -1,0 +1,137 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+
+    <div class="" style="width: 100% ; text-align: center">
+        <h2><div class="p-3 mb-2 bg-info text-white"><strong>Active Requests</strong></div></h2>
+    </div>
+
+    <form class="form-inline mt-2" method="POST" action="{% url 'users:active_reqs' %}" >
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="search" placeholder="Blood Group" aria-label="Search" name="blood_group" required>
+        <button class="btn btn-outline-success my-3 my-sm-0" type="submit">Search</button>
+    </form>
+    {% if error_message %}
+        <div class="p-2 mb-1 mt-2 bg-warning text-dark" style="text-align: center">{{ error_message }}</div>
+    {% endif %}
+    {% if blood_request %}
+        <table class="table table-hover mt-2" >
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">City</th>
+                <th scope="col">State</th>
+                <th scope="col">Blood Group</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Date Requested</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for request in blood_request %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ request.0.first_name }} {{ request.0.last_name }}</td>
+                    <td>{{ request.0.donor.city }}</td>
+                    <td>{{ request.0.donor.state }}</td>
+                    <td><strong>{{ request.0.donor.blood_group }}</strong></td>
+                    <td>{{ request.0.donor.contact }}</td>
+                    <td>{{ request.1.date_requested }}</td>
+
+                    <td>
+                        {% if request.1.status == 1 %}
+                            <a href="#">
+                                <button class="btn btn-info">Pending</button>
+                            </a>
+                        {% elif request.1.status == 2 %}
+                            <a href="#">
+
+                                <!-- Button trigger modal -->
+                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="APPROVE">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal_active_accept{{ forloop.counter }}">
+                                        Accepted
+                                    </button>
+                                </span>
+
+                                <!-- Modal -->
+                                <form method="POST" action="{% url 'users:approve' request.1.id %}">
+                                    {% csrf_token %}
+                                    <div class="modal fade" id="exampleModal_active_accept{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Approve form of Donation</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label >Name</label>
+                                                        <input type="text" class="form-control"  value="{{ request.0.first_name }} {{ request.0.last_name }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Blood Group</label>
+                                                        <input type="text" class="form-control"  value="{{ request.0.donor.blood_group }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Enter Reward</label>
+                                                        <input type="number" class="form-control"  value="" name="reward"  required min="0">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Approve</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </a>
+                        {% elif request.1.status == 3 %}
+                            <a href="#">
+                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="APPROVE">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal_active_reject{{ forloop.counter }}">
+                                        Rejected
+                                    </button>
+                                </span>
+
+                                <!-- Modal -->
+                                <form method="POST" action="{% url 'users:approve' request.1.id  %}">
+                                    {% csrf_token %}
+                                    <div class="modal fade" id="exampleModal_active_reject{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Approve form of Rejection</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <textarea name = "decline_reason" rows="8" cols="50" style="font: -apple-system-short-headline" readonly>
+                                                        {{ request.1.reason.decline_reason }}
+                                                    </textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Make Viewed</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor%}
+
+            </tbody>
+        </table>
+
+    {% endif %}
+{% endblock %}

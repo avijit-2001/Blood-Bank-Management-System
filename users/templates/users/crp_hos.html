@@ -1,0 +1,40 @@
+{% extends 'users/base.html' %}
+
+
+{% block content %}
+    <div class="" style="width: 100% ; text-align: center">
+        <h2><div class="p-3 mb-2 bg-info text-white"><strong>Create Profile</strong></div></h2>
+    </div>
+    {% if error_message %}
+        <div class="p-2 mb-1 bg-warning text-dark" style="text-align: center">{{ error_message }}</div>
+    {% endif %}
+
+    <div  style="width: 60% ; margin-left: 20%; margin-right: 20%;">
+        <form method="POST" action="{% url 'users:crp_hos' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label >Enter Registration Number</label>
+                <input type="text" class="form-control"  placeholder="Eg :WB7362REG4Y" name="registration_id" required>
+                <small  class="form-text text-muted">Central Government certified registration id </small>
+            </div>
+            <div class="form-group">
+                <label >Contact Number</label>
+                <input type="text" class="form-control"  name="contact" placeholder="Eg :+91 86702 12313" required>
+            </div>
+            <div class="form-group">
+                <label >City</label>
+                <input type="text" class="form-control"  placeholder="Eg : Kolkata" name="city" required>
+            </div>
+            <div class="form-group">
+                <label >State</label>
+                <input type="text" class="form-control"  placeholder="Eg : West Bengal" name="state" required>
+            </div>
+            <div class="form-group">
+                <label >Pin Code</label>
+                <input type="text" class="form-control"  placeholder="Eg : 722136" name="pin_code" required>
+            </div>
+            <input type="submit" class="btn btn-primary" value = "Submit">
+
+        </form>
+    </div>
+{% endblock %}

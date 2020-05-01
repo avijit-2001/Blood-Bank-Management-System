@@ -1,0 +1,266 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+
+    <div class="" style="width: 100% ; text-align: center">
+        <h2><div class="p-3 mb-2 bg-info text-white"><strong>Donation History</strong></div></h2>
+    </div>
+
+    {% if user.is_hospital %}
+        <form class="form-inline mt-2" method="POST" action="{% url 'users:view_history' %}" >
+            {% csrf_token %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Blood Group" aria-label="Search" name="blood_group" required>
+            <button class="btn btn-outline-success my-3 my-sm-0" type="submit">Search</button>
+        </form>
+    {% endif %}
+    {% if error_message %}
+        <div class="p-2 mb-1 mt-2 bg-warning text-dark" style="text-align: center">{{ error_message }}</div>
+    {% endif %}
+    {% if user.is_hospital %}
+        {% if blood_request %}
+            <table class="table table-hover mt-2" >
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Blood Group</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Actioned</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for request in blood_request %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ request.0.first_name }} {{ request.0.last_name }}</td>
+                        <td>{{ request.0.donor.city }}</td>
+                        <td><strong>{{ request.0.donor.blood_group }}</strong></td>
+                        <td>{{ request.0.donor.contact }}</td>
+
+                        <td>
+
+                            {% if request.1.status == 4 %}
+                                <a href="#">
+
+                                    <!-- Button trigger modal -->
+                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Details">
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal_history_accept{{ forloop.counter }}">
+                                            Donated
+                                        </button>
+                                    </span>
+
+                                    <!-- Modal -->
+
+                                    <div class="modal fade" id="exampleModal_history_accept{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Details of Donations</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label >Name</label>
+                                                        <input type="text" class="form-control"  value="{{ request.0.first_name }} {{ request.0.last_name }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Date Requested</label>
+                                                        <input type="" class="form-control"  value="{{ request.1.date_requested }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Date Donated</label>
+                                                        <input type="" class="form-control"  value="{{ request.1.date_approved }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Rewards Given</label>
+                                                        <input type="number" class="form-control"  value="{{ request.1.reward.amount }}"   readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            {% elif request.1.status == 5 %}
+                                <a href="#">
+                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Details">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal_history_reject{{ forloop.counter }}">
+                                            Rejected
+                                        </button>
+                                    </span>
+
+                                    <!-- Modal -->
+
+                                    <div class="modal fade" id="exampleModal_history_reject{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Details for Rejection</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label >Name</label>
+                                                        <input type="text" class="form-control"  value="{{ request.0.first_name }} {{ request.0.last_name }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Date Requested</label>
+                                                        <input type="" class="form-control"  value="{{ request.1.date_requested }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Date Approved</label>
+                                                        <input type="" class="form-control"  value="{{ request.1.date_approved }}"  readonly>
+                                                    </div>
+                                                    <textarea name = "reasons" rows="8" cols="50" style="font: -apple-system-short-headline" readonly>
+                                                            {{ request.1.reason.decline_reason }}
+                                                        </textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor%}
+
+                </tbody>
+            </table>
+
+        {% endif %}
+    {% else %}
+        {% if blood_request %}
+            <table class="table table-hover mt-2" >
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Hospital Name</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Actioned</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for request in blood_request %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ request.0.first_name }}</td>
+                        <td>{{ request.0.hospital.city }}</td>
+                        <td><strong>{{ request.0.hospital.contact }}</strong></td>
+
+                        <td>
+
+                            {% if request.1.status == 4 %}
+                                <a href="#">
+
+                                    <!-- Button trigger modal -->
+                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Details">
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal_history_accept{{ forloop.counter }}">
+                                            Donated
+                                        </button>
+                                    </span>
+
+                                    <!-- Modal -->
+
+                                    <div class="modal fade" id="exampleModal_history_accept{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Details of Donations</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label >Name</label>
+                                                        <input type="text" class="form-control"  value="{{ request.0.first_name }} {{ request.0.last_name }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Date Requested</label>
+                                                        <input type="" class="form-control"  value="{{ request.1.date_requested }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Date Donated</label>
+                                                        <input type="" class="form-control"  value="{{ request.1.date_approved }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Rewards Given</label>
+                                                        <input type="number" class="form-control"  value="{{ request.1.reward.amount }}"   readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            {% elif request.1.status == 5 %}
+                                <a href="#">
+                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Details">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal_history_reject{{ forloop.counter }}">
+                                            Rejected
+                                        </button>
+                                    </span>
+
+                                    <!-- Modal -->
+
+                                    <div class="modal fade" id="exampleModal_history_reject{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Details for Rejection</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label >Name</label>
+                                                        <input type="text" class="form-control"  value="{{ request.0.first_name }} {{ request.0.last_name }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Date Requested</label>
+                                                        <input type="" class="form-control"  value="{{ request.1.date_requested }}"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label >Date Approved</label>
+                                                        <input type="" class="form-control"  value="{{ request.1.date_approved }}"  readonly>
+                                                    </div>
+                                                    <textarea name = "reasons" rows="8" cols="50" style="font: -apple-system-short-headline" readonly>
+                                                            {{ request.1.reason.decline_reason }}
+                                                        </textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor%}
+
+                </tbody>
+            </table>
+
+        {% endif %}
+    {% endif %}
+{% endblock %}

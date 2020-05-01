@@ -1,0 +1,68 @@
+{% extends 'users/base.html' %}
+
+
+{% block content %}
+    <div class="" style="width: 100% ; text-align: center">
+        <h2><div class="p-3 mb-2 bg-info text-white"><strong>Update Profile</strong></div></h2>
+    </div>
+    {% if error_message %}
+        <div class="p-2 mb-1 bg-warning text-dark" style="text-align: center">{{ error_message }}</div>
+    {% endif %}
+
+    <div  style="width: 60% ; margin-left: 20%; margin-right: 20%;">
+        <form method="POST" action="{% url 'users:update' %}">
+            {% if user.is_donor %}
+                {% csrf_token %}
+                <div class="form-group">
+                    <label >Enter Age</label>
+                    <input type="number" class="form-control"  placeholder="{{ user.donor.age }}" name="age" required>
+                    <small  class="form-text text-muted">Age should be Greater than 21 Years</small>
+                </div>
+                <div class="form-group">
+                    <label >Blood Group</label>
+                    <input type="text" class="form-control"  placeholder="{{ user.donor.blood_group }}" name="blood_group" required>
+                </div>
+                <div class="form-group">
+                    <label >Contact Number</label>
+                    <input type="text" class="form-control"  name="contact" placeholder="{{ user.donor.contact }}" required>
+                </div>
+                <div class="form-group">
+                    <label >City</label>
+                    <input type="text" class="form-control"  placeholder="{{ user.donor.city }}" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label >State</label>
+                    <input type="text" class="form-control"  placeholder="{{ user.donor.state }}" name="state" required>
+                </div>
+                <div class="form-group">
+                    <label >Pin Code</label>
+                    <input type="text" class="form-control"  placeholder="{{ user.donor.pin_code }}" name="pin_code" required>
+                </div>
+            {% else %}
+                {% csrf_token %}
+                <div class="form-group">
+                    <label >Enter Registration Number</label>
+                    <input type="text" class="form-control"  placeholder="{{ user.hospital.registration_id }}" name="registration_id" required>
+                    <small  class="form-text text-muted">Central Government certified registration id </small>
+                </div>
+                <div class="form-group">
+                    <label >Contact Number</label>
+                    <input type="text" class="form-control"  name="contact" placeholder="{{ user.hospital.contact }}" required>
+                </div>
+                <div class="form-group">
+                    <label >City</label>
+                    <input type="text" class="form-control"  placeholder="{{ user.hospital.city }}" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label >State</label>
+                    <input type="text" class="form-control"  placeholder="{{ user.hospital.state}}" name="state" required>
+                </div>
+                <div class="form-group">
+                    <label >Pin Code</label>
+                    <input type="text" class="form-control"  placeholder="{{ user.hospital.pin_code}}" name="pin_code" required>
+                </div>
+            {% endif %}
+            <input type="submit" class="btn btn-primary" value = "Submit">
+        </form>
+    </div>
+{% endblock %}
