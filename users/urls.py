@@ -14,7 +14,7 @@ urlpatterns = [
     path('signup/hospital/', views.sig_hos, name='sig_hos'),
     path('create/hospital/', views.crp_hos, name='crp_hos'),
     path('hospital/search/donor/', views.search_donor, name='search_donor'),
-    path('request/donor<int:donor_id>/bg<str:blood_group>/city<str:city>/', views.make_request, name='make_request'),
+    path('request/donor<int:donor_user_id>/bg<str:blood_group>/city<str:city>/', views.make_request, name='make_request'),
     # blood_group, city, request_id
     path('undo/req/bg<str:blood_group>/city<str:city>/id=<int:request_id>/', views.undo_request, name='undo_request'),
     path('donor/new/request/view/', views.request_view_donor, name='request_view_donor'),

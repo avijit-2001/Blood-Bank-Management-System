@@ -11,6 +11,7 @@ def sig_don(request):
 
     context = {
         'form_user': SignUpForm,
+        'title': "VowForRed -Signup",
     }
     if request.user.is_authenticated:
         return redirect('users:home')
@@ -24,7 +25,7 @@ def sig_don(request):
             user.is_donor = True
             user.save()
             login(request, user)
-            print(user)
+            # print(user)
             return redirect('users:crp_don')
         else:
             return render(request, 'users/signup.html', context)
@@ -53,7 +54,9 @@ def crp_don(request):
             return redirect('users:home')
         else:
             context = {
-                'error_message': "We Respect Your Heroic Attitude , Once You Come Become 22 come Back Again"
+                'error_message': "We Respect Your Heroic Attitude , Once You Come Become 22 come Back Again",
+                'title': "VowForRed -Create Profile",
+
             }
             return render(request, 'users/crp_don.html', context)
     else:
@@ -61,9 +64,7 @@ def crp_don(request):
 
 
 def home(request):
-    context = {
-        'posts': Post.objects.order_by('-date_posted')
-    }
+
     if request.user.is_authenticated and request.user.is_hospital:
         blood_groups = ["O+", "O-", "A-", "A+", "B-", "B+", "AB-", "AB+", ]
         repos = HospitalRepository.objects.filter(hospital_user_id=request.user.id)
@@ -80,12 +81,16 @@ def home(request):
         if not flag:
             context = {
                 'posts': Post.objects.order_by('-date_posted'),
-                'error_message': "Some of Repository is seems to be Empty !!! Please Check Out Now"
+                'error_message': "Some of Repository is seems to be Empty !!! Please Check Out Now",
+                'title': "VowForRed -Home",
+
             }
             return render(request, 'blog/home.html', context)
 
         context = {
             'posts': Post.objects.order_by('-date_posted'),
+            'title': "VowForRed -Home",
+
         }
         return render(request, 'blog/home.html', context)
 
@@ -93,16 +98,21 @@ def home(request):
         req = Request.objects.filter(donor_id=request.user.id, status=1)
         if req:
             context = {
-                'error_message': "You Have some emergency requests !!! Please check in Requests "
+                'error_message': "You Have some emergency requests !!! Please check in Requests ",
+                'title': "VowForRed -Home",
+
             }
             return render(request, 'blog/home.html', context)
         else:
             context = {
                 'posts': Post.objects.order_by('-date_posted'),
+                'title': "VowForRed -Home",
+
             }
             return render(request, 'blog/home.html', context)
     context = {
         'posts': Post.objects.order_by('-date_posted'),
+        'title': 'VowForRed -Home',
     }
     return render(request, 'blog/home.html', context)
 
@@ -125,12 +135,16 @@ def old_home(request):
         if not flag:
             context = {
                 'posts': Post.objects.order_by('date_posted'),
-                'error_message': "Some of Repository is seems to be Empty !!! Please Check Out Now"
+                'error_message': "Some of Repository is seems to be Empty !!! Please Check Out Now",
+                'title': "VowForRed -Home",
+
             }
             return render(request, 'blog/home.html', context)
 
         context = {
             'posts': Post.objects.order_by('date_posted'),
+            'title': "VowForRed -Home",
+
         }
         return render(request, 'blog/home.html', context)
 
@@ -138,16 +152,22 @@ def old_home(request):
         req = Request.objects.filter(donor_id=request.user.id, status=1)
         if req:
             context = {
-                'error_message': "You Have some emergency requests !!! Please check in Requests "
+                'error_message': "You Have some emergency requests !!! Please check in Requests ",
+                'title': "VowForRed -Home",
+
             }
             return render(request, 'blog/home.html', context)
         else:
             context = {
                 'posts': Post.objects.order_by('date_posted'),
+                'title': "VowForRed -Home",
+
             }
             return render(request, 'blog/home.html', context)
     context = {
         'posts': Post.objects.order_by('date_posted'),
+        'title': "VowForRed -Home",
+
     }
     return render(request, 'blog/home.html', context)
 
@@ -183,20 +203,26 @@ def login_user(request):
                 if request.user.is_donor:
                     context = {
                         'error_message': "Please Complete Your Profile for Others Benefit :)",
+                        'title': "VowForRed -Create",
+
                     }
                     return render(request, 'users/crp_don.html', context)
                 else:
                     context = {
                         'error_message': "Please Complete Your Profile for Others Benefit :)",
+                        'title': "VowForRed -Create",
+
                     }
                     return render(request, 'users/crp_hos.html', context)
         else:
             context = {
-                'error_message': "Username or Password is incorrect"
+                'error_message': "Username or Password is incorrect",
+                'title': "VowForRed -Login",
+
             }
             return render(request, 'users/login.html', context)
     else:
-        return render(request, 'users/login.html')
+        return render(request, 'users/login.html', {'title': "VowForRed -Login"})
 
 
 def update(request):
@@ -226,13 +252,14 @@ def update(request):
         except:
             return redirect('users:home')
     else:
-        return render(request, 'users/update.html')
+        return render(request, 'users/update.html', {'title': "VowForRed -Update Profile"})
 
 
 def sig_hos(request):
 
     context = {
         'form_user': HospitalSignUpForm,
+        'title': "VowForRed -SignUp",
     }
     if request.user.is_authenticated:
         return redirect('users:home')
@@ -273,7 +300,7 @@ def crp_hos(request):
         new_hospital.save()
         return redirect('users:home')
     else:
-        return render(request, 'users/crp_hos.html')
+        return render(request, 'users/crp_hos.html', {'title': "VowForRed -Create Profile"})
 
 
 def search_donor(request):
@@ -297,7 +324,7 @@ def search_donor(request):
                     j = 0
                     for req in sent_request:
 
-                        if req.donor_id == don.id:
+                        if req.donor_id == don.user.id:
                             a = (don, req.status, req.id)
                             j = 1
                             if req.status == 1:
@@ -314,31 +341,34 @@ def search_donor(request):
                         'sent_request': sent_request,
                         'blood_group': blood_group,
                         'city': city,
+                        'title': "VowForRed -Search Donor",
                     }
                     return render(request, 'users/search_donor.html', context)
 
                 context = {
                     'donors': donors,
-                    'error_message': "---No Donors are there to be Requested---",
+                    'error_message': "No Donors are there to be Requested",
+                    'title': "VowForRed -Search Donor",
                 }
                 return render(request, 'users/search_donor.html', context)
             else:
-                return render(request, 'users/search_donor.html')
+                return render(request, 'users/search_donor.html', {'title': "VowForRed -Search Donor"})
         else:
             return redirect('users:home')
     else:
         return redirect('users:home')
 
 
-def make_request(request, donor_id, blood_group, city):
+def make_request(request, donor_user_id, blood_group, city):
     if not request.user.is_authenticated:
         return redirect('users:home')
     if request.user.is_hospital:
         new_request = Request()
-        new_request.donor_id = donor_id
+        new_request.donor_id = donor_user_id
         new_request.hospital_id = request.user.id
         new_request.date_requested = timezone.now().date()
         new_request.status = 1
+        new_request.blood_group = blood_group
         new_request.save()
 
         all_donors = Donor.objects.filter(blood_group=blood_group, city=city, available=True)
@@ -351,12 +381,13 @@ def make_request(request, donor_id, blood_group, city):
 
         donors = []
 
+        # print(sent_request)
         for don in all_donors:
 
             j = 0
 
             for req in sent_request:
-                if req.donor_id == don.id:
+                if req.donor_id == don.user.id:
                     a = (don, req.status, req.id)
                     if req.status == 1:
                         donors.append(a)
@@ -367,10 +398,14 @@ def make_request(request, donor_id, blood_group, city):
                 a = (don, 0)
                 donors.append(a)
 
+        # for don in donors:
+        #     print(don)
+
         context = {
             'donors': donors,
             'blood_group': blood_group,
             'city': city,
+            'title': "VowForRed -Search Donor",
         }
 
         return render(request, 'users/search_donor.html', context)
@@ -395,25 +430,28 @@ def undo_request(request, blood_group, city, request_id):
     for don in all_donors:
         j = 0
         for req in sent_request:
-            if req.donor_id == don.id:
+            if req.donor_id == don.user.id:
                 a = (don, req.status, req.id)
                 if req.status == 1:
                     donors.append(a)
                 j = 1
                 break
         if j == 0:
+
             a = (don, 0)
             donors.append(a)
     context = {
         'donors': donors,
         'blood_group': blood_group,
         'city': city,
-        'request_id': request_id
+        'request_id': request_id,
+        'title': "VowForRed -Search Donor",
     }
     return render(request, 'users/search_donor.html', context)
 
 
 def request_view_donor(request):
+
     if request.user.is_authenticated and request.user.is_donor:
         blood_requests_raw = Request.objects.filter(donor_id=request.user.id)
         blood_requests = []
@@ -422,6 +460,9 @@ def request_view_donor(request):
             if not req.date_approved:
                 blood_requests.append(req)
 
+        name = ""
+        contact = 1
+        city = ""
         view_request = []
         for reqs in blood_requests:
             if reqs.status == 1:
@@ -438,10 +479,12 @@ def request_view_donor(request):
         if view_request:
             context = {
                 'blood_request': view_request,
+                'title': "VowForRed -Requests",
             }
         else:
             context = {
-                'error_message': " No Requests Pending . You are All Done "
+                'error_message': " No Requests Pending . You are All Done ",
+                'title': "VowForRed -Requests",
             }
         return render(request, 'users/requests_view_donor.html', context)
     return redirect('users:home')
@@ -461,7 +504,7 @@ def accept_request(request, request_id):
 
 def reject_request(request, request_id):
 
-    print("5")
+    # print("5")
     if request.user.is_authenticated and request.user.is_donor:
         curr_req = Request.objects.get(id=request_id)
         curr_req.status = 3
@@ -485,12 +528,16 @@ def view_repo(request):
             blood_group = request.POST["blood_group"]
 
             repo = HospitalRepository.objects.filter(hospital_user_id=user.id, blood_group=blood_group)
+
             context = {
                 'repo': repo,
+                'title': "VowForRed -Repository",
             }
-            print(repo)
+            # print(repo)
             return render(request, 'users/view_repo.html', context)
+
         else:
+
             repos = HospitalRepository.objects.filter(hospital_user_id=user.id)
             repos_sorted = []
             blood_types = ["O+", "O-", "A-", "A+", "B-", "B+", "AB-", "AB+", ]
@@ -498,7 +545,7 @@ def view_repo(request):
                 for repo in repos:
                     if repo.blood_group == blood:
                         a = (blood, repo.plasma_count, repo.quantity)
-                        print(a)
+                        # print(a)
                         if repo.quantity == 0:
                             if repo.plasma_count != 10:
                                 continue
@@ -506,6 +553,7 @@ def view_repo(request):
 
             context = {
                 'repos_sorted': repos_sorted,
+                'title': "VowForRed -Repository",
             }
             # print(repos_sorted)
             return render(request, 'users/view_repo.html', context)
@@ -581,11 +629,13 @@ def active_reqs(request):
 
         if blood_request:
             context = {
-                'blood_request': blood_request
+                'blood_request': blood_request,
+                'title': "VowForRed -Active Requests",
             }
         else:
             context = {
-                'error_message': "You does not having any ACTIVE requests"
+                'error_message': "You does not having any Active requests",
+                'title': "VowForRed -Active Requests",
             }
 
         return render(request, 'users/active_requests.html', context)
@@ -624,8 +674,15 @@ def view_history(request):
     if user.is_authenticated:
         if user.is_hospital:
             if request.method == "POST":
-                bg = request.POST["blood_group"]
-                blood_request_raw = Request.objects.filter(hospital_id=user.id, blood_group=bg)
+                blood_group = request.POST["blood_group"]
+                print(blood_group=="O+")
+                donorss = Donor.objects.all()
+                for d in donorss:
+                    print(d.blood_group==blood_group)
+                rs=Request.objects.all()
+                for r in rs:
+                    print(r.blood_group)
+                blood_request_raw = Request.objects.filter(hospital_id=user.id, blood_group=blood_group)
                 print(blood_request_raw)
             else:
                 blood_request_raw = Request.objects.filter(hospital_id=user.id)
@@ -638,19 +695,26 @@ def view_history(request):
 
             if blood_request:
                 context = {
-                    'blood_request': blood_request
+                    'blood_request': blood_request,
+                    'title': "VowForRed -Repository",
                 }
             else:
+                if request.method == "POST":
+                    message = "No Blood Donation Recorded with this Blood Group"
+                else:
+                    message = "History to be Created soon"
                 context = {
-                    'error_message': "History to be Created !!! :)"
+                    'error_message': message,
+                    'title': "VowForRed -Repository",
+
                 }
             return render(request, 'users/history.html', context)
         else:
             if request.method == "POST":
                 bg = request.POST["blood_group"]
                 blood_request_raw = Request.objects.filter(hospital_id=user.id, blood_group=bg)
-                print(blood_request_raw)
-                print(bg)
+                # print(blood_request_raw)
+                # print(bg)
 
             else:
                 blood_request_raw = Request.objects.filter(donor_id=user.id)
@@ -663,11 +727,19 @@ def view_history(request):
 
             if blood_request:
                 context = {
-                    'blood_request': blood_request
+                    'blood_request': blood_request,
+                    'title': "VowForRed -History",
+
                 }
             else:
+                if request.method == "POST":
+                    message = "No Blood Donation Recorded with this Blood Group"
+                else:
+                    message = "History to be Created soon"
                 context = {
-                    'error_message': "History to be Created !!! :)"
+                    'error_message': message,
+                    'title': "VowForRed -History",
+
                 }
             return render(request, 'users/history.html', context)
 
@@ -681,7 +753,7 @@ def change(request):
         user.donor.available = not user.donor.available
         user.donor.save()
 
-        return redirect( request.POST["url"] )
+        return redirect(request.POST["url"])
     else:
         return redirect('users:home')
 

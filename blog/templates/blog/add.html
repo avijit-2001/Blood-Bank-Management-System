@@ -5,12 +5,12 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="exampleFormControlInput1" >Enter Title</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Post Title" name="title">
+            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Post Title" name="title" required>
         </div>
 
         <div class="form-group">
             <label for="exampleFormControlTextarea1" >Enter Content</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20" name="content">
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20" name="content" required>
 
             </textarea>
         </div>

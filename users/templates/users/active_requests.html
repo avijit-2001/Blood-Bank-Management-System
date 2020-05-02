@@ -6,16 +6,18 @@
         <h2><div class="p-3 mb-2 bg-info text-white"><strong>Active Requests</strong></div></h2>
     </div>
 
+    {% if error_message %}
+        <div class="alert alert-danger mt-2" role="alert">
+            {{ error_message }}
+        </div>
+    {% endif %}
+
     <form class="form-inline mt-2" method="POST" action="{% url 'users:active_reqs' %}" >
         {% csrf_token %}
         <input class="form-control mr-sm-2" type="search" placeholder="Blood Group" aria-label="Search" name="blood_group" required>
         <button class="btn btn-outline-success my-3 my-sm-0" type="submit">Search</button>
     </form>
-    {% if error_message %}
-        <div class="alert alert-danger" role="alert">
-            {{ error_message }}
-        </div>
-    {% endif %}
+
     {% if blood_request %}
         <table class="table table-hover mt-2" >
             <thead>
@@ -114,9 +116,13 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <textarea name = "decline_reason" rows="8" cols="50" style="font: -apple-system-short-headline" readonly>
-                                                        {{ request.1.reason.decline_reason }}
-                                                    </textarea>
+                                                    <div class="form-group">
+                                                        <label for="exampleFormControlTextarea1">Reason</label>
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "decline_reason">{{ request.1.reason.decline_reason }}</textarea>
+                                                    </div>
+{#                                                    <textarea name = "decline_reason" rows="8" cols="50" style="font: -apple-system-short-headline" readonly>#}
+{#                                                        {{ request.1.reason.decline_reason }}#}
+{#                                                    </textarea>#}
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

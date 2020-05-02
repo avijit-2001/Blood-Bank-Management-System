@@ -8,7 +8,7 @@
 
     <form class="form-inline mt-2" method="POST" action="{% url 'users:view_repo' %}" >
         {% csrf_token %}
-        <input class="form-control mr-sm-2" type="search" placeholder="Blood Group" aria-label="Search" name="blood_group" required>
+        <input class="form-control mr-sm-2" type="search" placeholder="Blood Group" aria-label="Search" name="blood_group" pattern="[A|B|AB|O](+|-)" required>
         <button class="btn btn-outline-success my-3 my-sm-0" type="submit">Search</button>
         <button type="button" class="btn btn-success ml-3" data-toggle="modal" data-target="#exampleModal3">
             Add Blood
@@ -39,7 +39,7 @@
                         <td>{{ rep.plasma_count }}</td>
                         <td>
                             {% if rep.quantity < 10 %}
-                                <div class="bg-danger text-white">{{ rep.2 }}</div>
+                                <div class="bg-danger text-white">{{ rep.quantity }}</div>
                             {% else %}
                                 {{ rep.quantity }}
                             {% endif %}
@@ -166,7 +166,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label >Enter Blood Group</label>
-                            <input type="text" class="form-control"  placeholder="Eg : O+" name="blood_group" pattern="[A|B|AB|O][+|-]" required>
+                            <input type="text" class="form-control"  placeholder="Eg : O+" name="blood_group" pattern="[A|B|AB|O](+|-)" required>
                             <small  class="form-text text-muted">Never Choose a invalid Blood Group </small>
                         </div>
                         <div class="form-group">

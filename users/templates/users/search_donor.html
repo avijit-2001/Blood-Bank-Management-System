@@ -6,17 +6,19 @@
         <h2><div class="p-3 mb-2 bg-info text-white"><strong>Search Donors</strong></div></h2>
     </div>
 
-    <form class="form-inline mt-2" method="POST" action="{% url 'users:search_donor' %}" >
-        {% csrf_token %}
-        <input class="form-control mr-sm-2" type="search" placeholder="Blood Group" aria-label="Search" name="blood_group" required>
-        <input class="form-control mr-sm-2" type="search" placeholder="Enter City" aria-label="Search" name="city" required>
-        <button class="btn btn-outline-success my-3 my-sm-0" type="submit">Search</button>
-    </form>
    {% if error_message %}
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger mt-2" role="alert">
             {{ error_message }}
         </div>
     {% endif %}
+
+    <form class="form-inline mt-2" method="POST" action="{% url 'users:search_donor' %}" >
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="search" placeholder="Blood Group" aria-label="Search" name="blood_group" pattern="(A|B|AB|O)[+|-]" required>
+        <input class="form-control mr-sm-2" type="search" placeholder="Enter City" aria-label="Search" name="city" required>
+        <button class="btn btn-outline-success my-3 my-sm-0" type="submit">Search</button>
+    </form>
+
     {% if donors %}
         <table class="table table-hover mt-2" >
             <thead>

@@ -13,7 +13,8 @@ def delete(request, post_id):
     blog_post = Post.objects.get(id=post_id)
     context = {
         'message': "Post has benn successfully deleted",
-        'posts': Post.objects.order_by('-date_posted')
+        'posts': Post.objects.order_by('-date_posted'),
+        'title': "VowForRed -Home",
 
     }
     blog_post.delete()
@@ -39,7 +40,9 @@ def about(request, post_id):
     context = {
         'post': post_t,
         'days': (datetime.now().date() - post_t.date_posted.date()).days,
-        'comments': comments
+        'comments': comments,
+        'title': "VowForRed -About",
+
     }
     return render(request, 'blog/about.html', context)
 
@@ -53,12 +56,14 @@ def add(request):
         new_post.save()
         context = {
             'posts': Post.objects.order_by('-date_posted'),
-            'message': "Post has benn successfully created",
+            'message': "Post has been successfully created",
+            'title': "VowForRed -Home",
+
 
         }
         return render(request, 'blog/home.html', context)
     else:
-        return render(request, 'blog/add.html')
+        return render(request, 'blog/add.html', {'title': "VowForRed -Add Post", })
 
 
 def update_blog(request, post_id):
@@ -70,12 +75,16 @@ def update_blog(request, post_id):
         context = {
             'posts': Post.objects.order_by('-date_posted'),
             'message': "Post has benn successfully updated",
+            'title': "VowForRed -Update Post",
+
 
         }
         return render(request, 'blog/home.html', context)
     else:
         context = {
             'post': Post.objects.get(id=post_id),
+            'title': "VowForRed -Update Post",
+
         }
         return render(request, 'blog/update.html', context)
 
@@ -107,7 +116,9 @@ def add_comment(request, post_id):
         context = {
             'post': post_t,
             'days': (datetime.now().date() - post_t.date_posted.date()).days,
-            'comments': comments
+            'comments': comments,
+            'title': "VowForRed -About",
+
         }
 
         return render(request, 'blog/about.html', context)
@@ -138,7 +149,9 @@ def add_reply(request, comment_id):
         context = {
             'post': post_t,
             'days': (datetime.now().date() - post_t.date_posted.date()).days,
-            'comments': comments
+            'comments': comments,
+            'title': "VowForRed -About",
+
         }
 
         return render(request, 'blog/about.html', context)
@@ -169,7 +182,9 @@ def delete_comment(request, comment_id):
     context = {
         'post': post_t,
         'days': (datetime.now().date() - post_t.date_posted.date()).days,
-        'comments': comments
+        'comments': comments,
+        'title': "VowForRed -About",
+
     }
     return render(request, 'blog/about.html', context)
 
@@ -198,7 +213,9 @@ def delete_reply(request, reply_id):
     context = {
         'post': post_t,
         'days': (datetime.now().date() - post_t.date_posted.date()).days,
-        'comments': comments
+        'comments': comments,
+        'title': "VowForRed -About",
+
     }
     return render(request, 'blog/about.html', context)
 
@@ -228,7 +245,10 @@ def edit_comment(request, comment_id):
         context = {
             'post': post_t,
             'days': (datetime.now().date() - post_t.date_posted.date()).days,
-            'comments': comments
+            'comments': comments,
+            'title': "VowForRed -About",
+
+
         }
         return render(request, 'blog/about.html', context)
 
@@ -261,6 +281,8 @@ def edit_reply(request, reply_id):
         context = {
             'post': post_t,
             'days': (datetime.now().date() - post_t.date_posted.date()).days,
-            'comments': comments
+            'comments': comments,
+            'title': "VowForRed -About",
+
         }
         return render(request, 'blog/about.html', context)
